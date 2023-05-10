@@ -20,5 +20,12 @@ public class Student {
     private String address;
 
     @OneToMany(mappedBy = "student")
-    private List<Grade> grades;
+    private List<HistoryGrade> historyGrades;
+
+    @OneToMany(mappedBy = "student")
+    private List<ScienceGrade> scienceGrades;
+
+    @OneToMany(mappedBy = "student")
+    private List<EnglishGrade> englishGrades;
+
 }

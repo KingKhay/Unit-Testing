@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class EnglishGrade implements Grade{
+public class EnglishGrade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
