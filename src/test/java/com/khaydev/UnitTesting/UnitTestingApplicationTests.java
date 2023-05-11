@@ -1,5 +1,6 @@
 package com.khaydev.UnitTesting;
 
+import com.khaydev.UnitTesting.exception.StudentNotFoundException;
 import com.khaydev.UnitTesting.model.Student;
 import com.khaydev.UnitTesting.repository.StudentRepository;
 import com.khaydev.UnitTesting.service.StudentService;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -77,6 +79,21 @@ class UnitTestingApplicationTests {
 
 		verify(studentRepository, times(1)).findById(student.getId());
 		verify(studentRepository, times(1)).deleteById(student.getId());
+	}
+
+	@Test
+	@DisplayName("Delete Student Test (Throws Exception)")
+	void testDeleteStudentByIdServiceMethodStudentNotFound(){
+		int nonExistingId = 5;
+
+		when(studentRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+
+		assertThrows(StudentNotFoundException.class,
+				() -> {
+			studentService.deleteStudentById(nonExistingId);
+				});
+
+		verify(studentRepository, times(1)).findById(nonExistingId);
 	}
 
 }
