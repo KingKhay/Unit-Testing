@@ -4,13 +4,12 @@ import com.khaydev.UnitTesting.exception.StudentNotFoundException;
 import com.khaydev.UnitTesting.model.Student;
 import com.khaydev.UnitTesting.repository.StudentRepository;
 import com.khaydev.UnitTesting.service.StudentService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UnitTestingApplicationTests {
 
 	@Autowired
@@ -30,6 +30,7 @@ class UnitTestingApplicationTests {
 	private final int nonExistentId = 5;
 
 	@Test
+	@Order(0)
 	void contextLoads() {
 	}
 
@@ -40,6 +41,7 @@ class UnitTestingApplicationTests {
 
 	@Test
 	@DisplayName("Save Student Test")
+	@Order(1)
 	void testSaveStudentServiceMethod(){
 
 		when(studentRepository.save(student)).thenReturn(student);
@@ -55,6 +57,7 @@ class UnitTestingApplicationTests {
 
 	@Test
 	@DisplayName("Update Student Test")
+	@Order(5)
 	void testUpdateStudentByIdServiceMethod(){
 
 		when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
@@ -72,6 +75,7 @@ class UnitTestingApplicationTests {
 
 	@Test
 	@DisplayName("Update Student Test (Throws exception)")
+	@Order(6)
 	void testUpdateStudentByIdServiceMethodThrowsException(){
 
 		when(studentRepository.findById(nonExistentId)).thenReturn(Optional.empty());
@@ -86,6 +90,7 @@ class UnitTestingApplicationTests {
 
 	@Test
 	@DisplayName("Delete Student Test")
+	@Order(7)
 	void testDeleteStudentByIdServiceMethod(){
 
 		when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
@@ -98,6 +103,7 @@ class UnitTestingApplicationTests {
 
 	@Test
 	@DisplayName("Delete Student Test (Throws Exception)")
+	@Order(8)
 	void testDeleteStudentByIdServiceMethodStudentNotFound(){
 
 		when(studentRepository.findById(nonExistentId)).thenReturn(Optional.empty());
@@ -112,6 +118,7 @@ class UnitTestingApplicationTests {
 
 	@Test
 	@DisplayName("Get Student Test")
+	@Order(2)
 	void getStudentByIdServiceMethod(){
 
 		when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
@@ -126,6 +133,7 @@ class UnitTestingApplicationTests {
 
 	@Test
 	@DisplayName("Get Student Test (Throws exception)")
+	@Order(3)
 	void getStudentByIdServiceMethodThrowsStudentNotFound(){
 
 		when(studentRepository.findById(nonExistentId)).thenReturn(Optional.empty());
@@ -136,6 +144,27 @@ class UnitTestingApplicationTests {
 				});
 
 		verify(studentRepository, times(1)).findById(nonExistentId);
+	}
+
+	@Test
+	@DisplayName("Get All Students")
+	@Order(4)
+	void getAllStudentTest(){
+
+		List<Student> students = List.of(
+				new Student(1, "King", "Address1",null, null, null),
+				new Student(1, "Khay", "Address2",null, null, null),
+				new Student(1, "Ebenezer", "Address3",null, null, null)
+		);
+
+		when(studentRepository.findAll()).thenReturn(students);
+
+		List<Student> retrievedStudents = studentService.findAllStudents();
+
+		assertEquals(3, retrievedStudents.size());
+		assertEquals("Ebenezer", retrievedStudents.get(2).getName());
+
+		verify(studentRepository, times(1)).findAll();
 	}
 
 }

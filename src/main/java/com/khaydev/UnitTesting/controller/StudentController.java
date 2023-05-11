@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/students")
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class StudentController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    Iterable<Student> findAllStudents(){
+    List<Student> findAllStudents(){
         return studentService.findAllStudents();
     }
 

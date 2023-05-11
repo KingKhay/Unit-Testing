@@ -6,6 +6,8 @@ import com.khaydev.UnitTesting.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
@@ -23,7 +25,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Iterable<Student> findAllStudents() {
+    public List<Student> findAllStudents() {
         return studentRepository.findAll();
     }
 
