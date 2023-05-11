@@ -27,6 +27,7 @@ class UnitTestingApplicationTests {
 	StudentRepository studentRepository;
 
 	private Student student = null;
+	private final int nonExistentId = 5;
 
 	@Test
 	void contextLoads() {
@@ -54,7 +55,7 @@ class UnitTestingApplicationTests {
 
 	@Test
 	@DisplayName("Update Student Test")
-	void testGetStudentByIdServiceMethod(){
+	void testUpdateStudentByIdServiceMethod(){
 
 		when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
 		when(studentRepository.save(student)).thenReturn(student);
@@ -67,6 +68,20 @@ class UnitTestingApplicationTests {
 
 		verify(studentRepository, times(1)).findById(student.getId());
 		verify(studentRepository, times(1)).save(student);
+	}
+
+	@Test
+	@DisplayName("Update Student Test (Throws exception)")
+	void testUpdateStudentByIdServiceMethodThrowsException(){
+
+		when(studentRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+
+		assertThrows(StudentNotFoundException.class,
+				() -> {
+			studentService.updateStudent(nonExistentId, new Student());
+				});
+
+		verify(studentRepository, times(1)).findById(nonExistentId);
 	}
 
 	@Test
@@ -84,16 +99,43 @@ class UnitTestingApplicationTests {
 	@Test
 	@DisplayName("Delete Student Test (Throws Exception)")
 	void testDeleteStudentByIdServiceMethodStudentNotFound(){
-		int nonExistingId = 5;
 
-		when(studentRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+		when(studentRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
 		assertThrows(StudentNotFoundException.class,
 				() -> {
-			studentService.deleteStudentById(nonExistingId);
+					studentService.deleteStudentById(nonExistentId);
 				});
 
-		verify(studentRepository, times(1)).findById(nonExistingId);
+		verify(studentRepository, times(1)).findById(nonExistentId);
+	}
+
+	@Test
+	@DisplayName("Get Student Test")
+	void getStudentByIdServiceMethod(){
+
+		when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
+
+		Student retrievedStudent = studentService.findStudentById(student.getId());
+
+		assertEquals(student.getName(), retrievedStudent.getName());
+		assertEquals(student.getAddress(), retrievedStudent.getAddress());
+
+		verify(studentRepository, times(1)).findById(student.getId());
+	}
+
+	@Test
+	@DisplayName("Get Student Test (Throws exception)")
+	void getStudentByIdServiceMethodThrowsStudentNotFound(){
+
+		when(studentRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+
+		assertThrows(StudentNotFoundException.class,
+				() -> {
+			studentService.findStudentById(nonExistentId);
+				});
+
+		verify(studentRepository, times(1)).findById(nonExistentId);
 	}
 
 }
