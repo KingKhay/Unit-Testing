@@ -39,6 +39,6 @@ public class StudentServiceImpl implements StudentService{
         existingStudent.setName(student.getName());
         existingStudent.setAddress(student.getAddress());
 
-        return existingStudent;
+        return studentRepository.save(existingStudent);
     }
 }
