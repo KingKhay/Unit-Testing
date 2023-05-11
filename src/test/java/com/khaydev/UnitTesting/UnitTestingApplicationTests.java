@@ -36,7 +36,7 @@ class UnitTestingApplicationTests {
 	}
 
 	@Test
-	@DisplayName("Save Method Must Return the Student Saved")
+	@DisplayName("Save Student Test")
 	void testSaveStudentServiceMethod(){
 
 		when(studentRepository.save(student)).thenReturn(student);
@@ -51,7 +51,7 @@ class UnitTestingApplicationTests {
 	}
 
 	@Test
-	@DisplayName("Update Method must return the Updated Student")
+	@DisplayName("Update Student Test")
 	void testGetStudentByIdServiceMethod(){
 
 		when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
@@ -65,6 +65,18 @@ class UnitTestingApplicationTests {
 
 		verify(studentRepository, times(1)).findById(student.getId());
 		verify(studentRepository, times(1)).save(student);
+	}
+
+	@Test
+	@DisplayName("Delete Student Test")
+	void testDeleteStudentByIdServiceMethod(){
+
+		when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
+
+		studentService.deleteStudentById(student.getId());
+
+		verify(studentRepository, times(1)).findById(student.getId());
+		verify(studentRepository, times(1)).deleteById(student.getId());
 	}
 
 }
