@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class StudentServiceImpl implements StudentService{
+public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
 
@@ -29,6 +29,9 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     public void deleteStudentById(int id) {
+
+        studentRepository.findById(id).orElseThrow(StudentNotFoundException::new);
+
         studentRepository.deleteById(id);
     }
 
