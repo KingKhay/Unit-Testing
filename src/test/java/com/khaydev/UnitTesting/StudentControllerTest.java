@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -49,6 +50,7 @@ public class StudentControllerTest {
     }
 
     @Test
+    @DisplayName("Get Student Should Return 200")
     void testGetStudentEndpoint() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/{id}", 2))
@@ -56,6 +58,24 @@ public class StudentControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value("Khay"));
 
+    }
+
+    @Test
+    @DisplayName("Save Student Should Return 201")
+    void testSaveStudentEndpoint() throws Exception {
+
+        String contentBody = """
+                {
+                    "id": 3,
+                    "name": "Maggie",
+                    "address": "Paris"
+                }
+                """;
+
+        mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON).content(contentBody))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Maggie"));
     }
 
 }
