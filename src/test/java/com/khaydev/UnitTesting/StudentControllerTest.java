@@ -24,7 +24,7 @@ public class StudentControllerTest {
 
     @Autowired
     private StudentRepository studentRepository;
-
+    private final String ENDPOINT = "/api/students";
 
 
     @BeforeEach
@@ -41,10 +41,21 @@ public class StudentControllerTest {
     @Order(1)
     void testGetAllStudentEndpoint() throws Exception {
         //Verify HTTP Response => Status Code, Content-Type, Json Response Body
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/students"))
+        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(2));
     }
+
+    @Test
+    void testGetStudentEndpoint() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/{id}", 2))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name").value("Khay"));
+
+    }
+
 }
