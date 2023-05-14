@@ -4,6 +4,7 @@ import com.khaydev.UnitTesting.model.Student;
 import com.khaydev.UnitTesting.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,13 +34,13 @@ public class StudentController {
         return studentService.findAllStudents();
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    Student updateStudent(int id, Student student){
+    Student updateStudent(@PathVariable int id, @RequestBody Student student){
         return studentService.updateStudent(id, student);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}",produces = "application/json")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteStudent(@PathVariable int id){
         studentService.deleteStudentById(id);

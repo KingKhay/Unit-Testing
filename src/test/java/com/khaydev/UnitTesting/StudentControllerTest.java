@@ -78,4 +78,20 @@ public class StudentControllerTest {
                 .andExpect(jsonPath("$.name").value("Maggie"));
     }
 
+    @Test
+    @DisplayName("Update Student Should Return 201")
+    void testUpdateStudentEndpoint() throws Exception {
+
+        String contentBody = """
+                {
+                    "name": "Ronnie",
+                    "address": "London"
+                }
+                """;
+
+        mockMvc.perform(MockMvcRequestBuilders.put(ENDPOINT + "/{id}", 2)
+                        .contentType(MediaType.APPLICATION_JSON).content(contentBody))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Ronnie"));
+    }
 }
